@@ -1,0 +1,59 @@
+spring:
+  r2dbc:
+    url: r2dbc:mysql://localhost:3306?useLegacyDatetimeCode=false&serverTimezone=UTC&createDatabaseIfNotExist=true&autoReconnect=true&useSSL=false&useUnicode=yes&characterEncoding=UTF-8&allowPublicKeyRetrieval=true
+    name: accessplus_pms
+    username: root
+    password: root
+    pool:
+      enabled: true
+      initial-size: 10
+      validation-query: SELECT 1
+  application:
+    name: accessplus-pms
+    admin:
+      enabled: true
+  webflux:
+    base-path: /access-plus/pms/api
+  sleuth:
+    web:
+      enabled: true
+      skip-pattern: /api-docs.*|/swagger.*|.*\.png|.*\.css|.*\.js|.*\.html|
+  security:
+    user:
+      password: anish
+
+# Spring Actuator Configurations
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+      base-path: /admin
+  endpoint:
+    health:
+      show-details: always
+    metrics:
+      enabled: true
+  info:
+    git:
+      mode: full
+  metrics:
+    tags:
+      application: ${spring.application.name}
+
+# Additional Application Information Configuration
+info:
+  app:
+    name: ${spring.application.name}
+    description: AccessPlus PCM Service
+    version: 1.0
+    swagger-ui: http://localhost:8080/${spring.webflux.base-path}/swagger-ui/index.html
+
+logging:
+  level:
+    root: info
+    com.accessplus.pcm: debug
+    org.springframework.r2dbc: trace
+    org.springframework.data.r2dbc: trace
+    io.r2dbc.mssql.QUERY: debug
+    io.r2dbc.mssql.PARAM: debug
